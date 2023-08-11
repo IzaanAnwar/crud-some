@@ -1,5 +1,5 @@
 {
-  "name": "crud-some",
+  "name": "get-some",
   "version": "1.0.0",
   "description": "lighwight orm sort of",
   "main": "index.ts",

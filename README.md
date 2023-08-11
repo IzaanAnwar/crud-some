@@ -1,6 +1,6 @@
-# CRUD-Some Database Interaction Library Documentation
+# jam-some Database Interaction Library Documentation
 
-CRUD-Some is a database interaction library that provides functions to perform CRUD (Create, Read, Update, Delete) operations on different types of databases including PostgreSQL, MySQL, and SQLite.
+jam-some is a database interaction library that provides functions to perform jam (Create, Read, Update, Delete) operations on different types of databases including PostgreSQL, MySQL, and SQLite.
 
 ## Table of Contents
 
@@ -10,15 +10,15 @@ CRUD-Some is a database interaction library that provides functions to perform C
 
 ## Getting Started
 
-To use **CRUD-Some**, install the library using npm:
+To use **jam-some**, install the library using npm:
 
 ```bash
-npm install crud-some
+npm install jam-some
 ```
 
 ## Supported Databases
 
-The `crud-some` package supports the following databases:
+The `jam-some` package supports the following databases:
 
 - PostgreSQL
 - MySQL
@@ -34,7 +34,7 @@ This function establishes a connection to the specified database.
 - `config` (object): Configuration options for connecting to the database.
 
 ```javascript
-import { connectDatabase } from 'crud-some';
+import { connectDatabase } from 'jam-some';
 
 const databaseType = 'postgres'; // Replace with your desired database type
 const config = {
@@ -53,7 +53,7 @@ Use this function to insert a new record into the specified table with the provi
 - `data` (object): The data to be inserted.
 
 ```javascript
-import { createSome } from 'crud-some';
+import { createSome } from 'jam-some';
 
 const newData = { name: 'John', age: 30 };
 await createSome(db, 'users', newData);
@@ -67,7 +67,7 @@ Retrieve all records from the specified table.
 - `tableName` (string): The name of the table.
 
 ```javascript
-import { getAll } from 'crud-some';
+import { getAll } from 'jam-some';
 
 const allRecords = await getAll(db, 'users');
 ```
@@ -80,7 +80,7 @@ Retrieve records from the specified table based on the provided conditions.
 - `where` (object): The conditions for filtering records.
 
 ```javascript
-import { getWhere } from 'crud-some';
+import { getWhere } from 'jam-some';
 
 const whereConditions = { users: { age: 30 } };
 const filteredRecords = await getWhere(db, whereConditions);
@@ -95,7 +95,7 @@ Retrieve the first record from the specified table based on the provided conditi
 - `orderBy` (string, optional): The order of the results (`ASC` or `DESC`).
 
 ```javascript
-import { getFirst } from 'crud-some';
+import { getFirst } from 'jam-some';
 
 const whereConditions = { users: { name: 'John' } };
 const firstRecord = await getFirst(db, whereConditions, 'ASC');
@@ -110,7 +110,7 @@ Update records in the specified table based on the provided conditions with the 
 - `data` (object): The new data to update the records with.
 
 ```javascript
-import { updateSome } from 'crud-some';
+import { updateSome } from 'jam-some';
 
 const updateConditions = { users: { name: 'John' } };
 const updatedData = { age: 31 };
@@ -125,9 +125,9 @@ Delete all records from the specified table.
 - `tableName` (string): The name of the table.
 
 ```javascript
-import { deleteSome } from 'crud-some';
+import { deleteSome } from 'jam-some';
 
 await deleteSome(db, 'users');
 ```
 
-For more information and examples, please visit the [GitHub repository](https://github.com/your_username/crud-some).
+For more information and examples, please visit the [GitHub repository](https://github.com/IzaanAnwar/jam-some).
