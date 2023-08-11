@@ -9,7 +9,7 @@ import { Database as SQLiteDatabase } from "sqlite3";
 describe("createConnection function", () => {
     it("should create a SQLite connection", async () => {
         const config: IConfigDB = {
-            fileName: ":memory:", // You can provide a path to a file if needed
+            fileName: "memory.db",
         };
 
         const dbConnection = (await connectDatabase(

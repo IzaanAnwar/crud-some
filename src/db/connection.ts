@@ -5,6 +5,9 @@ import {
 } from "mysql2/promise";
 import { Database as SQLiteDatabase } from "sqlite3";
 
+/**
+ * Configuration options for connecting to a database.
+ */
 export interface IConfigDB {
     user?: string;
     host?: string;
@@ -14,8 +17,19 @@ export interface IConfigDB {
     fileName?: string;
     connectionURL?: string;
 }
+/** Represents a connection to a database. */
 export type DatabaseConnection = PGClient | MySQLConnection | SQLiteDatabase;
+
+/** Supported database types. */
 type DatabaseType = "postgres" | "mysql" | "sqlite";
+
+/**
+ * Establishes a connection to the specified database based on the provided configuration.
+ * @param databaseType - The type of the database to connect to (postgres, mysql, or sqlite).
+ * @param config - The configuration options for connecting to the database.
+ * @returns A Promise that resolves with a database connection.
+ * @throws {Error} If an unsupported database type is provided or if the configuration is invalid.
+ */
 export async function connectDatabase(
     databaseType: DatabaseType,
     config: IConfigDB

@@ -218,3 +218,30 @@ export async function updateSome(
         throw error;
     }
 }
+
+export async function deleteSome(db: DatabaseConnection, tableName: string) {
+    const query = `DELETE FROM ${tableName}`;
+    try {
+        if (db instanceof PGClient) {
+            await db.query(query);
+            console.log(query);
+        } else if (db instanceof Database) {
+            await new Promise<void>((resolve, reject) => {
+                db.run(query, (error) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        console.log(query);
+                        resolve();
+                    }
+                });
+            });
+        } else {
+            await db.query(query);
+            console.log(query);
+        }
+    } catch (error) {
+        console.log(error, `\nfor query [${query}]`);
+        throw error;
+    }
+}
