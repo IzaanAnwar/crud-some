@@ -1,11 +1,11 @@
 {
-  "name": "get-some",
-  "version": "1.0.0",
+  "name": "jam-some",
+  "version": "0.1",
   "description": "lighwight orm sort of",
-  "main": "index.ts",
+  "main": "src/db/connection.ts",
   "scripts": {
     "test": "jest",
-    "start": "ts-node src/index.ts",
+    "start": "ts-node src/db/connection.ts",
     "build": "tsc"
   },
   "author": "Izaan",
