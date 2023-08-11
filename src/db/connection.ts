@@ -23,12 +23,18 @@ export async function connectDatabase(
     if (databaseType === "postgres" && config) {
         const client = new PGClient(config);
         await client.connect();
+        console.log("[Connection established]");
+
         return client;
     } else if (databaseType === "mysql" && config) {
         const connection = createMySQLConnection(config);
+        console.log("[Connection established]");
+
         return connection;
     } else if (databaseType === "sqlite" && config.fileName) {
         const db = new SQLiteDatabase(config.fileName);
+        console.log("[Connection established]");
+
         return db;
     } else {
         throw new Error(
