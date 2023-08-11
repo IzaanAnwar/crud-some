@@ -1,3 +1,31 @@
-node_modules/ 
-dist/.
-.env
+# Ignore development and build-related files
+node_modules/
+dist/
+*.log
+*.ts
+*.js.map
+*.d.ts
+coverage/
+
+# Ignore editor-specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore source control files
+.git
+.gitignore
+
+# Ignore test files and directories
+__tests__/
+test/
+
+# Ignore configuration files
+tsconfig.json
+tsconfig.build.json
+
+# Ignore documentation and example files
+docs/
+examples/
+README.md
