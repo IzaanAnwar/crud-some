@@ -7,17 +7,10 @@ CRUD-Some is a database interaction library that provides functions to perform C
 - [Getting Started](#getting-started)
 - [Supported Databases](#supported-databases)
 - [Functions](#functions)
-  - [connectDatabase(databaseType, config)](#connectdatabase)
-  - [createSome(db, tableName, data)](#createsome)
-  - [getAll(db, tableName)](#getall)
-  - [getWhere(db, where)](#getwhere)
-  - [getFirst(db, where, orderBy)](#getfirst)
-  - [updateSome(db, where, data)](#updatesome)
-  - [deleteSome(db, tableName)](#deletesome)
 
 ## Getting Started
 
-To use CRUD-Some, install the library using npm:
+To use **CRUD-Some**, install the library using npm:
 
 ```bash
 npm install crud-some
