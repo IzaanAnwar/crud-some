@@ -1,6 +1,6 @@
 {
-  "name": "jam-some",
-  "version": "0.1",
+  "name": "crud-some",
+  "version": "1.0.2",
   "description": "lighwight orm sort of",
   "main": "src/db/connection.ts",
   "scripts": {
