@@ -1,6 +1,61 @@
-import { DatabaseConnection, connectDatabase } from "./connection";
 import { Client as PGClient } from "pg";
-import { Database, Database as SQLiteDatabase } from "sqlite3";
+import {
+    createConnection as createMySQLConnection,
+    Connection as MySQLConnection,
+} from "mysql2/promise";
+import { Database as SQLiteDatabase } from "sqlite3";
+
+/**
+ * Configuration options for connecting to a database.
+ */
+export interface IConfigDB {
+    user?: string;
+    host?: string;
+    database?: string;
+    password?: string;
+    port?: number;
+    fileName?: string;
+    connectionURL?: string;
+}
+/** Represents a connection to a database. */
+export type DatabaseConnection = PGClient | MySQLConnection | SQLiteDatabase;
+
+/** Supported database types. */
+type DatabaseType = "postgres" | "mysql" | "sqlite";
+
+/**
+ * Establishes a connection to the specified database based on the provided configuration.
+ * @param databaseType - The type of the database to connect to (postgres, mysql, or sqlite).
+ * @param config - The configuration options for connecting to the database.
+ * @returns A Promise that resolves with a database connection.
+ * @throws {Error} If an unsupported database type is provided or if the configuration is invalid.
+ */
+export async function connectDatabase(
+    databaseType: DatabaseType,
+    config: IConfigDB
+): Promise<DatabaseConnection> {
+    if (databaseType === "postgres" && config) {
+        const client = new PGClient(config);
+        await client.connect();
+        console.log("[Connection established]");
+
+        return client;
+    } else if (databaseType === "mysql" && config) {
+        const connection = createMySQLConnection(config);
+        console.log("[Connection established]");
+
+        return connection;
+    } else if (databaseType === "sqlite" && config.fileName) {
+        const db = new SQLiteDatabase(config.fileName);
+        console.log("[Connection established]");
+
+        return db;
+    } else {
+        throw new Error(
+            `Unsupported Database ${databaseType} USE ONLY [Mysql, postgresql or sqlite]`
+        );
+    }
+}
 
 /**
  * Inserts a new record into the specified table with the provided data.
@@ -89,7 +144,13 @@ export async function getWhere(
     where: WhereClause
 ): Promise<any[]> {
     const tableName = Object.keys(where)[0];
+    if (!tableName || tableName === "") {
+        throw new Error("Table Name Not Provided");
+    }
     const condition = where[tableName];
+    if (!condition) {
+        throw new Error("Condition Not Provided or is Inncorrect");
+    }
 
     const columns = Object.keys(condition).join(" AND ");
     const values = Object.values(condition).join(" AND ");
@@ -99,7 +160,7 @@ export async function getWhere(
     try {
         if (db instanceof PGClient) {
             result = await db.query(query);
-        } else if (db instanceof Database) {
+        } else if (db instanceof SQLiteDatabase) {
             result = await new Promise<any[]>((resolve, reject) => {
                 console.log("heer", query);
 
@@ -134,7 +195,13 @@ export async function getFirst(
     orderBy: "ASC" | "DESC" = "ASC"
 ) {
     const tableName = Object.keys(where)[0];
+    if (!tableName || tableName === "") {
+        throw new Error("Table Name Not Provided");
+    }
     const condition = where[tableName];
+    if (!condition) {
+        throw new Error("Condition Not Provided or is Inncorrect");
+    }
 
     const columns = Object.keys(condition).join(" AND ");
     const values = Object.values(condition)
@@ -147,7 +214,7 @@ export async function getFirst(
         if (db instanceof PGClient) {
             result = await db.query(query);
             console.log(query);
-        } else if (db instanceof Database) {
+        } else if (db instanceof SQLiteDatabase) {
             result = await new Promise<any[]>((resolve, reject) => {
                 db.all(query, (error, rows) => {
                     if (error) {
@@ -182,7 +249,14 @@ export async function updateSome(
     data: Record<string, any>
 ): Promise<void> {
     const tableName = Object.keys(where)[0];
+    if (!tableName || tableName === "") {
+        throw new Error("Table Name Not Provided");
+    }
+
     const condition = where[tableName];
+    if (!condition) {
+        throw new Error("Condition Not Provided or is Inncorrect");
+    }
 
     const ConditionCol = Object.keys(condition).join(" AND ");
     const ConditionVal = Object.values(condition)
@@ -198,7 +272,7 @@ export async function updateSome(
         if (db instanceof PGClient) {
             await db.query(query);
             console.log(query);
-        } else if (db instanceof Database) {
+        } else if (db instanceof SQLiteDatabase) {
             await new Promise<any[]>((resolve, reject) => {
                 db.all(query, (error, rows) => {
                     if (error) {
@@ -225,7 +299,7 @@ export async function deleteSome(db: DatabaseConnection, tableName: string) {
         if (db instanceof PGClient) {
             await db.query(query);
             console.log(query);
-        } else if (db instanceof Database) {
+        } else if (db instanceof SQLiteDatabase) {
             await new Promise<void>((resolve, reject) => {
                 db.run(query, (error) => {
                     if (error) {

@@ -1,5 +1,5 @@
-import { Database } from "sqlite3";
-import { DatabaseConnection, connectDatabase } from "../db/connection";
+import { Database as SQLiteDatabase } from "sqlite3";
+import { DatabaseConnection, IConfigDB, connectDatabase } from "../index";
 import {
     createSome,
     deleteSome,
@@ -7,12 +7,27 @@ import {
     getFirst,
     getWhere,
     updateSome,
-} from "../db/query";
+} from "..";
+
+describe("createConnection function", () => {
+    it("should create a SQLite connection", async () => {
+        const config: IConfigDB = {
+            fileName: "memory.db",
+        };
+
+        const dbConnection = (await connectDatabase(
+            "sqlite",
+            config
+        )) as SQLiteDatabase;
+        expect(dbConnection).toBeInstanceOf(SQLiteDatabase);
+        dbConnection.close();
+    });
+});
 
 describe("createSome function", () => {
-    let sqliteDBMockup: Database;
+    let sqliteDBMockup: SQLiteDatabase;
     beforeEach(() => {
-        sqliteDBMockup = new Database("memory.db");
+        sqliteDBMockup = new SQLiteDatabase("test.db");
     });
     afterAll(async () => {
         // Close the SQLite database after tests

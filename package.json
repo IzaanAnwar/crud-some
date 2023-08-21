@@ -2,12 +2,15 @@
   "name": "crud-some",
   "version": "1.0.3",
   "description": "lighwight orm sort of",
-  "main": "src/db/connection.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
   "scripts": {
     "test": "jest",
-    "start": "ts-node src/db/connection.ts",
+    "start": "ts-node src/connection.ts",
     "build": "tsc"
   },
+  "files": ["dist", "README.md", "package.json"],
   "author": "Izaan",
   "license": "ISC",
   "dependencies": {
