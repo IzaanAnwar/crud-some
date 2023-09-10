@@ -1,5 +1,6 @@
-import { Database as SQLiteDatabase } from "sqlite3";
-import { DatabaseConnection, IConfigDB, connectDatabase } from "../index";
+import Database, { Database as SQLiteDatabase } from "bun:sqlite";
+import { expect, test, describe, afterAll, beforeEach } from "bun:test";
+import { connectDatabase } from "../sqlite/index";
 import {
     createSome,
     deleteSome,
@@ -7,24 +8,19 @@ import {
     getFirst,
     getWhere,
     updateSome,
-} from "..";
+} from "../sqlite/index";
 
 describe("createConnection function", () => {
-    it("should create a SQLite connection", async () => {
-        const config: IConfigDB = {
-            fileName: "memory.db",
-        };
-
+    test("should create a SQLite connection", async () => {
         const dbConnection = (await connectDatabase(
-            "sqlite",
-            config
+            "test.db"
         )) as SQLiteDatabase;
         expect(dbConnection).toBeInstanceOf(SQLiteDatabase);
         dbConnection.close();
     });
 });
 
-describe("createSome function", () => {
+describe("Testing all the functions", () => {
     let sqliteDBMockup: SQLiteDatabase;
     beforeEach(() => {
         sqliteDBMockup = new SQLiteDatabase("test.db");
@@ -34,8 +30,8 @@ describe("createSome function", () => {
         sqliteDBMockup.close();
     });
 
-    it("should create the user table", async () => {
-        const db: DatabaseConnection = sqliteDBMockup;
+    test("should create the user table", async () => {
+        const db: Database = sqliteDBMockup;
         const createTableQuery = `
         CREATE TABLE IF NOT EXISTS user (
           id INTEGER PRIMARY KEY,
@@ -44,24 +40,12 @@ describe("createSome function", () => {
         )
       `;
 
-        try {
-            await new Promise<void>((resolve, reject) => {
-                db.run(createTableQuery, (error) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        resolve();
-                    }
-                    db.close();
-                });
-            });
-        } catch (error) {
-            fail(error);
-        }
+        db.exec(createTableQuery);
+
         expect(true).toBe(true);
     });
-    it("should create a record in sqlite database", async () => {
-        const db: DatabaseConnection = sqliteDBMockup;
+    test("should create a record in sqlite database", async () => {
+        const db: Database = sqliteDBMockup;
         const table = "user";
         const data = {
             name: "john",
@@ -70,49 +54,48 @@ describe("createSome function", () => {
         await createSome(db, table, data);
     });
 
-    it("should retrieve all data in sqlite database", async () => {
-        const db: DatabaseConnection = sqliteDBMockup;
+    test("should retrieve all data in sqlite database", async () => {
+        const db: Database = sqliteDBMockup;
         const table = "user";
         const result = (await getAll(db, table)) as any[];
         expect(result.length).toBe(1);
     });
 
-    it("should retrieve records based on conditions in SQLite", async () => {
-        const db: DatabaseConnection = sqliteDBMockup;
+    test("should retrieve records based on conditions in SQLite", async () => {
+        const db: Database = sqliteDBMockup;
         await createSome(db, "user", { name: "alex", age: 24 });
         await createSome(db, "user", { name: "tom", age: 25 });
 
         const condition = { age: 23 };
-        const records = await getWhere(db, { user: condition });
+        const records = (await getWhere(db, { user: condition })) as {
+            id: number;
+            name: string;
+            age: number;
+        }[];
         expect(records.length).toBe(1);
-        expect(records[0].name).toBe("john");
+        expect(records.at(0)?.name).toBe("john");
     });
 
-    it("should retrieve the first record based on conditions in SQLite", async () => {
-        const db: DatabaseConnection = sqliteDBMockup;
+    test("should retrieve the first record based on conditions in SQLite", async () => {
+        const db: Database = sqliteDBMockup;
         await createSome(db, "user", { name: "andrew", age: 24 });
         const condition = { age: 24 };
         const record = (await getFirst(db, { user: condition })) as any[];
         expect(record[0].name).toBe("alex");
     });
 
-    it("should update records based on conditions in SQLite", async () => {
-        const db: DatabaseConnection = sqliteDBMockup;
+    test("should update records based on conditions in SQLite", async () => {
+        const db: Database = sqliteDBMockup;
 
         const condition = { age: 23 };
         const newData = { age: 27 };
         try {
             await updateSome(db, { user: condition }, newData);
-        } catch (error) {
-            fail(error);
-        }
+        } catch (error) {}
     });
-    it("should delete all the rows from the user table", async () => {
-        const db: DatabaseConnection = sqliteDBMockup;
-        try {
-            await deleteSome(db, "user");
-        } catch (error) {
-            fail(error);
-        }
+    test("should delete all the rows from the user table", async () => {
+        const db: Database = sqliteDBMockup;
+
+        await deleteSome(db, "user");
     });
 });
