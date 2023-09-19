@@ -1,6 +1,6 @@
 {
   "name": "crud-some",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "lighwight orm sort of",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
